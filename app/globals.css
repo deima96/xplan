@@ -1,0 +1,645 @@
+:root {
+  --bg: #ffffff;
+  --ink: #1a1a1a;
+  --muted: #555555;
+  --field: #f4f4f4;
+  --line: #dcdcdc;
+  --accent-a: #e86d29;
+  --accent-b: #cb132b;
+  --err: #b3121f;
+  --font:
+    "Rubik", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  box-sizing: border-box;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e0e0e;
+    --ink: #f1f1f1;
+    --muted: #b0b0b0;
+    --field: #1b1b1b;
+    --line: #383838;
+    --err: #ff8a8a;
+  }
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: inherit;
+}
+video {
+  display: block;
+  background: #7a2b1c;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.55);
+}
+.cp :focus-visible {
+  outline-color: var(--accent-b);
+  box-shadow: none;
+}
+
+/* ---------- pause / play ---------- */
+.motion {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 400 12px/1 var(--font);
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+.motion:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+.motion svg {
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
+}
+
+/* ---------- LANDING ---------- */
+.home {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+  animation: fade 0.5s ease both;
+  /* width of the 16:9 design artboard: fills the screen like object-fit: cover */
+  --w: max(100vw, calc(100dvh * 16 / 9));
+  --shade: rgba(
+    70,
+    8,
+    2,
+    0.55
+  ); /* darkening layer for text contrast; set to transparent to remove */
+  --ov-line: rgba(
+    255,
+    255,
+    255,
+    0.5
+  ); /* grid line colour (your SVG used #b3b3b3) */
+  --ov-ink: #ffffff; /* text colour (your SVG used #b3b3b3) */
+}
+.home .bg {
+  position: absolute;
+  inset: 0;
+}
+.home .bg-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.75) saturate(1.4) contrast(1.1) hue-rotate(-9deg);
+}
+.home .shade {
+  position: absolute;
+  inset: 0;
+  background: var(--shade);
+  pointer-events: none;
+}
+.home .stage {
+  position: absolute;
+  width: var(--w);
+  aspect-ratio: 16 / 9;
+  left: calc((100vw - var(--w)) / 2);
+  top: calc((100dvh - var(--w) * 9 / 16) / 2);
+  pointer-events: none;
+}
+.overlay {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.ov-line {
+  stroke: var(--ov-line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ov-line * {
+  vector-effect: non-scaling-stroke;
+}
+/* Your SVG uses "Lovin Sans". Add the font file and uncomment to use it:
+@font-face { font-family: "Lovin Sans"; src: url("/fonts/LovinSans-Regular.woff2") format("woff2"); font-display: swap; }
+*/
+.ov-text {
+  fill: var(--ov-ink);
+  filter: drop-shadow(0 1px 10px rgba(40, 6, 2, 0.35));
+  font-family: "Lovin Sans", "LovinSans-Regular", var(--font);
+  font-weight: 300;
+}
+.ov-hello {
+  font-size: 132.3px;
+}
+.ov-tagline {
+  font-size: 51.43px;
+}
+.ov-note {
+  font-size: 24.68px;
+}
+.home .motion-home {
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left));
+  bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+/* navbar: aligned to the same artboard as the SVG */
+.nav {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  top: max(18px, 5.2dvh);
+  padding-top: env(safe-area-inset-top);
+}
+.nav-inner {
+  position: absolute;
+  top: 0;
+  left: max(20px, calc((100vw - var(--w)) / 2 + var(--w) * 0.169));
+  right: max(20px, calc((100vw - var(--w)) / 2 + var(--w) * 0.167));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  display: block;
+  line-height: 0;
+}
+.nav-logo img {
+  display: block;
+  width: clamp(104px, calc(var(--w) * 0.088), 220px);
+  height: auto;
+}
+.nav-link {
+  position: relative;
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 2px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: 400 clamp(14px, calc(var(--w) * 0.0125), 26px)/1 var(--font);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: 0;
+  height: 1px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Portrait / narrow screens: whole artboard fits the width, centred over a full-screen video */
+@media (max-aspect-ratio: 4 / 3) {
+  .home {
+    --w: 100vw;
+  }
+  .home .stage {
+    display: none;
+  }
+  .home .mobile-overlay {
+    display: block;
+  }
+  .nav-inner {
+    left: 22px;
+    right: 22px;
+  }
+}
+
+.mobile-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: #fff;
+}
+.mobile-overlay p {
+  position: absolute;
+  margin: 0;
+  font-family: "Lovin Sans", "LovinSans-Regular", var(--font);
+  font-weight: 300;
+  text-shadow: 0 1px 12px rgba(40, 6, 2, 0.4);
+}
+.m-v,
+.m-h {
+  position: absolute;
+  background: var(--ov-line);
+}
+.m-v {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+.m-v1 {
+  left: 15%;
+}
+.m-v2 {
+  right: 15%;
+}
+.m-h {
+  left: 0;
+  right: 0;
+  top: 40.5%;
+  height: 1px;
+}
+.m-hello {
+  left: 19%;
+  top: 24%;
+  font-size: clamp(60px, 21vw, 150px);
+  line-height: 1;
+}
+.m-tagline {
+  left: 19%;
+  right: 17%;
+  bottom: 25%;
+  font-size: clamp(20px, 5.6vw, 40px);
+  line-height: 1.22;
+}
+.m-note {
+  left: 19%;
+  right: 17%;
+  bottom: 12%;
+  font-size: clamp(13px, 3.6vw, 20px);
+  line-height: 1.35;
+}
+
+/* ---------- CONTACT PANEL (staircase) ---------- */
+.cp-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s linear 0.8s;
+}
+.cp-layer[data-open="true"] {
+  pointer-events: auto;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.cp-scrim {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+}
+
+.cp {
+  /* the panel is always white, whatever the OS theme */
+  --ink: #1a1a1a;
+  --muted: #555;
+  --field: #f4f4f4;
+  --line: #dcdcdc;
+  --err: #b3121f;
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  background: #fff;
+  color: var(--ink);
+  /* small screens: wipes up from the bottom */
+  clip-path: polygon(
+    0 100%,
+    0 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    0 100%,
+    0 100%
+  );
+  transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.18, 1);
+}
+.cp-layer[data-open="true"] .cp {
+  clip-path: polygon(
+    85.73% 0,
+    100% 0,
+    100% 100%,
+    51.46% 100%,
+    51.46% 54.35%,
+    68.59% 54.35%,
+    68.59% 23.43%,
+    85.73% 23.43%
+  );
+}
+
+.cp-close {
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top));
+  right: max(14px, env(safe-area-inset-right));
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  cursor: pointer;
+}
+.cp-close:hover {
+  background: var(--field);
+}
+.cp-close svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  fill: none;
+}
+
+.cp-body {
+  position: absolute;
+  left: calc(
+    63% - 6px
+  ); /* shifted left by the new padding, so the form doesn't move */
+  top: 27.2%;
+  bottom: 3%;
+  width: calc(
+    clamp(200px, 18vw, 400px) + 10px
+  ); /* original width + left and right padding */
+  max-width: none;
+  margin: 0;
+  padding: 0 6px; /* was: 0 6px 0 0 */
+  overflow-y: auto;
+}
+.cp-title {
+  margin: 0 0 20px;
+  font: 500 22px/1.2 var(--font);
+}
+
+.field {
+  margin: 0 0 16px;
+}
+.field label {
+  display: block;
+  font: 400 15px/1.2 var(--font);
+  margin-bottom: 7px;
+}
+.field input,
+.field textarea {
+  width: 100%;
+  font: 400 16px/1.3 var(--font);
+  color: var(--ink);
+  background: var(--field);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 10px 12px;
+}
+.field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+.field input:focus,
+.field textarea:focus {
+  outline: 2px solid var(--accent-b);
+  outline-offset: 0;
+  border-color: transparent;
+}
+.field .err {
+  color: var(--err);
+  font: 400 12.5px/1.3 var(--font);
+  margin-top: 5px;
+}
+.field.bad input,
+.field.bad textarea {
+  border-color: var(--err);
+}
+.submit {
+  font: 400 19px/1 var(--font);
+  color: #fff;
+  border: 0;
+  border-radius: 2px;
+  padding: 11px 14px;
+  cursor: pointer;
+  background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+  min-width: 112px;
+}
+.submit:hover {
+  filter: brightness(1.08);
+}
+.submit:active {
+  transform: translateY(1px);
+}
+.submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.status {
+  font: 400 14px/1.4 var(--font);
+  margin: 14px 0 0;
+  min-height: 1.4em;
+}
+.status[data-kind="error"] {
+  color: var(--err);
+}
+.addr {
+  font: 400 12.5px/1.45 var(--font);
+  color: var(--muted);
+  margin: 18px 0 0;
+  font-style: normal;
+  max-width: 36ch;
+}
+
+/* Desktop: the white staircase on the right; the video stays visible in the steps on the left */
+@media (min-aspect-ratio: 4 / 3) and (min-width: 900px) and (min-height: 620px) {
+  .cp {
+    overflow: hidden;
+    clip-path: polygon(
+      100% 0,
+      100% 0,
+      100% 100%,
+      100% 100%,
+      100% 54.35%,
+      100% 54.35%,
+      100% 23.43%,
+      100% 23.43%
+    );
+  }
+  .cp-layer[data-open="true"] .cp {
+    clip-path: polygon(
+      75.73% 0,
+      100% 0,
+      100% 100%,
+      41.46% 100%,
+      41.46% 54.35%,
+      58.59% 54.35%,
+      58.59% 23.43%,
+      75.73% 23.43%
+    );
+  }
+  .cp-close {
+    position: absolute;
+    top: clamp(16px, 2.2vw, 36px);
+    right: clamp(16px, 2.2vw, 36px);
+  }
+  .cp-body {
+    position: absolute;
+    left: calc(71% - 6px);
+    top: 27.2%;
+    bottom: 3%;
+    width: calc(clamp(230px, 19vw, 380px) + 12px);
+    max-width: none;
+    margin: 0;
+    padding: 0 6px;
+    overflow-y: auto;
+  }
+  .cp-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .field {
+    margin-bottom: clamp(14px, 1.5vw, 24px);
+  }
+  .field label {
+    font-size: clamp(14px, 1.05vw, 18px);
+    margin-bottom: 0.45vw;
+  }
+  .field input,
+  .field textarea {
+    font-size: clamp(14px, 0.95vw, 17px);
+    padding: 0.62vw 0.8vw;
+  }
+  .field textarea {
+    min-height: 5.5vw;
+  }
+  .submit {
+    font-size: clamp(17px, 1.3vw, 22px);
+    padding: 0.8vw 1vw;
+    margin-top: 0.4vw;
+  }
+  .addr {
+    font-size: clamp(11.5px, 0.8vw, 14px);
+    max-width: none;
+  }
+}
+
+/* Desktop: reproduce the 16:9 design, form is real HTML in the white area */
+@media (min-width: 1100px) and (min-height: 620px) and (min-aspect-ratio: 4 / 3) {
+  .contact {
+    display: grid;
+    place-items: center;
+  }
+  .hero {
+    width: min(100vw, calc(100dvh * 16 / 9));
+    aspect-ratio: 16 / 9;
+    container-type: inline-size;
+  }
+  .crop {
+    height: 100%;
+    aspect-ratio: auto;
+    overflow: visible;
+  }
+  .frame {
+    width: 100%;
+    height: 100%;
+  }
+  .panel {
+    position: absolute;
+    left: 63%;
+    top: 27.2%;
+    width: max(22cqw, 250px);
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+  .panel h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .field {
+    margin-bottom: 1.5cqw;
+  }
+  .field label {
+    font-size: max(14px, 1.05cqw);
+    margin-bottom: 0.45cqw;
+  }
+  .field input,
+  .field textarea {
+    font-size: max(14px, 0.95cqw);
+    padding: 0.62cqw 0.8cqw;
+  }
+  .field textarea {
+    min-height: 5.5cqw;
+  }
+  .submit {
+    font-size: max(17px, 1.3cqw);
+    padding: 0.8cqw 1cqw;
+    margin-top: 0.4cqw;
+  }
+  .addr {
+    font-size: max(11.5px, 0.8cqw);
+    max-width: none;
+  }
+  .motion-contact {
+    left: 2%;
+    bottom: 3%;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home {
+    animation: none;
+  }
+  .cp,
+  .cp-layer {
+    transition: none;
+  }
+  .nav-link::after {
+    transition: none;
+  }
+}
